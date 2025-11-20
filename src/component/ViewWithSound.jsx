@@ -11,9 +11,9 @@ export default function ViewWithSound() {
   ];
 
   const sounds = [
-    "public/sounds/soundo1.mp3",
-    "public/sounds/soundo1.mp3",
-    "public/sounds/soundo1.mp3",
+    "public/sounds/sound2.mp3",
+    "public/sounds/sound2.mp3",
+    "public/sounds/sound2.mp3",
   ];
 
   return (
@@ -21,7 +21,11 @@ export default function ViewWithSound() {
     {positions.map((pos, i) => (
         <mesh key={i} position={pos}>
           <boxGeometry args={[0.1, 0.1, 0.1]} />
-          <meshStandardMaterial color="blue" />
+          <meshStandardMaterial 
+          color="blue" 
+          transparent={true}
+          opacity={0}
+          />
 
           <PositionalAudio
             ref={soundRef[i]}

@@ -1,10 +1,10 @@
 import { Canvas } from '@react-three/fiber'
 import ViewWithSound from './ViewWithSound'
-import { Environment, Float, OrbitControls } from '@react-three/drei'
-import { DepthOfField, EffectComposer, Vignette, Bloom } from '@react-three/postprocessing'
+import { Environment, Float, MapControls, MeshDistortMaterial, OrbitControls } from '@react-three/drei'
+import { DepthOfField, EffectComposer, Vignette,  } from '@react-three/postprocessing'
 import { useState } from 'react'
 import Button from "react-bootstrap/Button"
-
+import * as THREE from "three";
 
 
 function View() {
@@ -28,13 +28,10 @@ function delta(){
           height: "100%"
         }}>
         
-        <Button onClick={delta}>パワーナップ開始{setting}</Button>
+        {/*<Button onClick={delta}>パワーナップ開始{setting}</Button>*/}
         <Button onClick={() => setPage(1)}>パワーナップ開始１</Button>
         <Button onClick={() => setPage(2)}>パワーナップ開始２</Button>
-        
-
-      </div>
-
+        </div>
 
       )}
 
@@ -54,11 +51,6 @@ function delta(){
                 speed={1.5}
                 >
                 
-                <mesh position={[2,1,2]}>
-                  <boxGeometry args={[1, 1, 1]} />
-                  <meshStandardMaterial color="orange"/>
-                </mesh>
-                
                 </Float>
 
                 <EffectComposer>
@@ -76,52 +68,51 @@ function delta(){
               </Canvas>
       )}
       {page === 2 && (
-        
-        <Canvas shadows>
-          <OrbitControls/>
-          <Environment preset={null} background>
-            <color attach="background" args={["#fbe8d3"]}/>
-          </Environment>
-          <ambientLight intensity={0.4} color={"#ffbb88"}/>
-          <directionalLight
-            position={[-2, 2, -3]}
-            intensity={0.4}
-            color={"#ffcc99"}
-          />
-          <pointLight
-            position={[-2, 2, -3]}
-            intensity={0.4}
-            color={"#ffcc99"}
-          />
-          <fog attach="fog" args={["#ffeedc", 2, 12]}/>
-          
-          <ViewWithSound/>
-          <Float 
-            position={[1, 1.1, -0.5]} 
-            rotation={[Math.PI / 3.5, 0, 0]} 
-            rotationIntensity={4} floatIntensity={6} 
-            speed={1.5}
-          />
+      
+      <Canvas>
 
-          <EffectComposer>
-            
-            <DepthOfField
-              focusDistance={0.02}
-              focalLength={0.02}
-              bokehScale={4}
-            />
-            <Vignette
-              eskil={false}
-              offset={0.4}
-              darkness={0.6}
-            />
-          </EffectComposer>
+      {/* 柔らかい赤の背景 */}
+      <color attach="background" args={["#330000"]} />
 
-        </Canvas>
+      {/* 胎内の球 */}
+      <mesh scale={6}>
+        <sphereGeometry args={[1, 64, 64]} />
+        <MeshDistortMaterial
+          color="#ff7f6e"
+          distort={0.35}
+          speed={1.1}
+          transparent
+          opacity={0.55}
+          side={THREE.BackSide}
+        />
+      </mesh>
+
+      <ViewWithSound/>
+
+      {/* 赤い拡散光 */}
+      <ambientLight intensity={0.6} color="#ffb3a8" />
+      <pointLight position={[0, 2, 2]} intensity={1.2} color="#ff9988" />
+
+      {/* 胎内の霧 */}
+      <fog attach="fog" args={["#ffddcc", 1, 10]} />
+
+      <EffectComposer>
+        <DepthOfField 
+        focusDistance={0.01} //ピント位置の距離（0~1）
+        focalLength={0.02}   //ボケの強さの基本量（0.01~0.1）
+        bokehScale={5}       //ボケの大きさ
+        />
+
+        <Vignette 
+        eskil={false}  //ビネットの種類
+        offset={0.3}   //どれくらい内側から強くなるか
+        darkness={0.8} //暗さの強さ
+        />
+      </EffectComposer>
+
+      </Canvas>
       )}
 
-
-      
     </>
   )
 }
