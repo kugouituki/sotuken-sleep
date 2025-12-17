@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber'
 import ViewWithSound from './ViewWithSound'
+
 import { Environment, Float, MapControls, MeshDistortMaterial, OrbitControls } from '@react-three/drei'
 import { DepthOfField, EffectComposer, Vignette,  } from '@react-three/postprocessing'
 import { useState } from 'react'
@@ -108,6 +109,8 @@ function delta(){
         offset={0.3}   //どれくらい内側から強くなるか
         darkness={0.8} //暗さの強さ
         />
+
+        
       </EffectComposer>
 
       </Canvas>

@@ -5,9 +5,9 @@ export default function ViewWithSound() {
   const soundRef = [useRef(), useRef(), useRef()];
   
   const positions = [
-    [100, 1, 0],
+    [50, 1, 0],
     [0, 1, 0],
-    [-100, 1, 0],
+    [-50, 1, 0],
   ];
 
   const sounds = [
