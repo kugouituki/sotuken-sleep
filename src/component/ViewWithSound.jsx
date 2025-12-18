@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { PositionalAudio } from '@react-three/drei'
 
-export default function ViewWithSound() {
+export default function ViewWithSound({ audioRef }) {
   const soundRef = [useRef(), useRef(), useRef()];
   
   const positions = [
@@ -26,14 +26,14 @@ export default function ViewWithSound() {
           transparent={true}
           opacity={0}
           />
-
-          <PositionalAudio
-            ref={soundRef[i]}
-            url={sounds[i]}
-            distance={5}
-            loop
-            autoplay
-          />
+        <PositionalAudio
+          ref={audioRef}
+          url={sounds[i]}
+          distance={5}
+          loop
+          autoplay
+        />
+          
         </mesh>
       ))}
     </>

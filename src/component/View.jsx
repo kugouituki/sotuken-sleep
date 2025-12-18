@@ -1,9 +1,9 @@
 import { Canvas } from '@react-three/fiber'
 import ViewWithSound from './ViewWithSound'
-
-import { Environment, Float, MapControls, MeshDistortMaterial, OrbitControls } from '@react-three/drei'
+import Blackout from './Blackout'
+import { Environment, Float, MeshDistortMaterial, OrbitControls } from '@react-three/drei'
 import { DepthOfField, EffectComposer, Vignette,  } from '@react-three/postprocessing'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Button from "react-bootstrap/Button"
 import * as THREE from "three";
 
@@ -11,12 +11,18 @@ import * as THREE from "three";
 function View() {
   // ページ番号（0 = スタート画面, 1 = 3D画面1, 2 = 3D画面2 ...）
   const [page, setPage] = useState(0)
-  const [setting, setsPage] = useState(0);
+  const soundRef = useRef()
+  const ambientRef = useRef()
+  const dirRef = useRef()
+
+
+  
+  /*const [setting, setsPage] = useState(0);
   
 
 function delta(){
   setsPage(count + 1);
-}
+}*/
 
   return (
     <>
@@ -28,7 +34,13 @@ function delta(){
           width: "100%",
           height: "100%"
         }}>
-        
+          
+          <b
+          style={{
+            fontSize: "64px",
+            padding: "100px"
+            }}>睡眠導入Webサイト</b>
+          
         {/*<Button onClick={delta}>パワーナップ開始{setting}</Button>*/}
         <Button onClick={() => setPage(1)}>パワーナップ開始１</Button>
         <Button onClick={() => setPage(2)}>パワーナップ開始２</Button>
@@ -36,38 +48,63 @@ function delta(){
 
       )}
 
-      {page === 1 && (
-        <Canvas shadows>
-                <OrbitControls />
-                <Environment preset="night" background />
-                <ambientLight intensity={0.1} />
-                <directionalLight color="white" position={[0, 5, 5]} />
-                
-                <ViewWithSound/>
-        
-                <Float 
-                position={[1, 1.1, -0.5]} 
-                rotation={[Math.PI / 3.5, 0, 0]} 
-                rotationIntensity={4} floatIntensity={6} 
-                speed={1.5}
-                >
-                
-                </Float>
+      {page === 1 && (() => {
+        return (
+          <Canvas shadows>
+  <OrbitControls enableZoom={false} />
 
-                <EffectComposer>
-                  <DepthOfField
-                    focusDistance={0}
-                    focalLength={0.02}
-                    bokehScale={2}
-                  />
-                  <Vignette
-                    eskil={false}
-                    offset={0.3}    
-                    darkness={0.8}  
-                  />
-                </EffectComposer>
-              </Canvas>
-      )}
+  {/* 背景（暗い暖色） */}
+  <color attach="background" args={["#2a1a12"]} />
+
+  {/* ベース照明（全体をほんのり） */}
+  <ambientLight
+    ref={ambientRef}
+    intensity={0.6}
+    color="#ffb199"   // 暖色
+  />
+
+  {/* 主光源（ろうそく的） */}
+  <pointLight
+    ref={dirRef}
+    position={[0, 2, 1]}
+    intensity={1.2}
+    //distance={6}
+    //decay={2}
+    color="#ff8c5a"
+  />
+
+  {/* 浮遊オブジェクトなど */}
+  <Float
+    position={[0, 0.6, 0]}
+    speed={0.6}
+    floatIntensity={0.8}
+    rotationIntensity={0.3}
+  >
+    {/* ここに表示物 */}
+  </Float>
+
+  <ViewWithSound audioRef={soundRef} />
+
+  <Blackout
+    duration={60}
+    audioRef={soundRef}
+    lights={[ambientRef, dirRef]}
+  />
+
+  <EffectComposer>
+    <Vignette
+      eskil={false}
+      offset={0.35}
+      darkness={0.3}
+    />
+  </EffectComposer>
+</Canvas>
+        )
+      })()}
+        
+        
+      
+      
       {page === 2 && (
       
       <Canvas>
@@ -88,11 +125,11 @@ function delta(){
         />
       </mesh>
 
-      <ViewWithSound/>
+      <ViewWithSound audioRef={soundRef}/>
 
       {/* 赤い拡散光 */}
-      <ambientLight intensity={0.6} color="#ffb3a8" />
-      <pointLight position={[0, 2, 2]} intensity={1.2} color="#ff9988" />
+      <ambientLight ref={ambientRef} intensity={0.6} color="#ffb3a8" />
+      <pointLight ref={dirRef} position={[0, 2, 2]} intensity={1.2} color="#ff9988" />
 
       {/* 胎内の霧 */}
       <fog attach="fog" args={["#ffddcc", 1, 10]} />
@@ -108,10 +145,14 @@ function delta(){
         eskil={false}  //ビネットの種類
         offset={0.3}   //どれくらい内側から強くなるか
         darkness={0.8} //暗さの強さ
-        />
-
-        
+        />  
       </EffectComposer>
+
+      <Blackout
+        duration={60}                 // 60秒で暗転
+        audioRef={soundRef}
+        lights={[ambientRef, dirRef]} // refそのものを渡す
+      />
 
       </Canvas>
       )}
