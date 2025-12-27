@@ -35,43 +35,40 @@ function delta(){
           height: "100%"
         }}>
           
-          <b
-          style={{
-            fontSize: "64px",
-            padding: "100px"
-            }}>睡眠導入Webサイト</b>
+          <b className='title'>睡眠導入Webサイト</b>
           
         {/*<Button onClick={delta}>パワーナップ開始{setting}</Button>*/}
         <Button onClick={() => setPage(1)}>パワーナップ開始１</Button>
         <Button onClick={() => setPage(2)}>パワーナップ開始２</Button>
+        <Button onClick={() => setPage(3)}>パワーナップ開始３</Button>
         </div>
 
       )}
 
-      {page === 1 && (() => {
-        return (
+      {page === 1 && (
+        
           <Canvas shadows>
-  <OrbitControls enableZoom={false} />
+          <OrbitControls enableZoom={false} />
 
-  {/* 背景（暗い暖色） */}
-  <color attach="background" args={["#2a1a12"]} />
+          {/* 背景（暗い暖色） */}
+          <color attach="background" args={["#2a1a12"]} />
 
-  {/* ベース照明（全体をほんのり） */}
-  <ambientLight
-    ref={ambientRef}
-    intensity={0.6}
-    color="#ffb199"   // 暖色
-  />
+          {/* ベース照明（全体をほんのり） */}
+          <ambientLight
+            ref={ambientRef}
+            intensity={0.6}
+            color="#ffb199"   // 暖色
+          />
 
-  {/* 主光源（ろうそく的） */}
-  <pointLight
-    ref={dirRef}
-    position={[0, 2, 1]}
-    intensity={1.2}
-    //distance={6}
-    //decay={2}
-    color="#ff8c5a"
-  />
+          {/* 主光源（ろうそく的） */}
+          <pointLight
+            ref={dirRef}
+            position={[0, 2, 1]}
+            intensity={10}
+            //distance={6}
+            //decay={2}
+            color="#ff8c5a"
+          />
 
   {/* 浮遊オブジェクトなど */}
   <Float
@@ -99,8 +96,8 @@ function delta(){
     />
   </EffectComposer>
 </Canvas>
-        )
-      })()}
+        
+    )}
         
         
       
@@ -156,6 +153,35 @@ function delta(){
 
       </Canvas>
       )}
+
+      {page === 3 && (
+      
+
+        <Canvas shadows camera={{ position: [0, 2, 6], fov: 50 }}>
+    
+          {/* 背景色（白寄り暖色） */}
+          <color attach="background" args={["#fff6ec"]} />
+
+          {/* 光源 */}
+          <ambientLight intensity={1.2} />
+          <directionalLight
+            position={[5, 10, 5]}
+            intensity={2.5}
+            color={"#fff2e0"}
+            castShadow
+          />
+          
+          <pointLight
+            position={[-3, 5, 3]}
+            intensity={1.8}
+            color={"#fff0dd"}
+          />
+          
+        </Canvas>
+
+
+      )}  
+
 
     </>
   )

@@ -11,7 +11,7 @@ export default function ViewWithSound({ audioRef }) {
   ];
 
   const sounds = [
-    "public/sounds/sound2.mp3",
+    "public/sounds/whitenoise.mp3",
     "public/sounds/sound2.mp3",
     "public/sounds/sound2.mp3",
   ];
